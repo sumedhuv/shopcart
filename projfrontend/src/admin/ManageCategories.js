@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
 import Base from '../core/Base';
-import { getCategories } from './helper/adminapicall';
+import { getCategories,deleteCategory } from './helper/adminapicall';
 
 const ManageCategories = () => {
     const [categories, setCategories] = useState([]);
@@ -20,6 +20,19 @@ const ManageCategories = () => {
     useEffect(() => {
         preload();
     }, []);
+  
+   const deleteACategory=(categoryId) => (
+     deleteCategory(categoryId, user._id, token)
+       .then((data) => {
+        if (data.error) {
+            console.log(data.error);
+        }
+        else {
+            preload();
+        }
+    })
+    
+)
     return (
         <Base title="Welcome admin" description="Manage products here">
       <h2 className="mb-4">All products:</h2>
@@ -44,7 +57,7 @@ const ManageCategories = () => {
                           </Link>
                         </div>
                         <div className="col-4">
-                          <button onClick={() => {}} className="btn btn-danger">
+                          <button onClick={() => {deleteACategory(category._id)}} className="btn btn-danger">
                             Delete
                           </button>
                         </div>

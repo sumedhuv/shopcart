@@ -47,9 +47,10 @@ export const updateCategory = (categoryId, userId, token, category) => {
         method: "PUT",
         headers: {
             Accept: "application/json",
+            "Content-Type":"application/json",
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ name: category })
+        body: JSON.stringify({ name: category }),
     }).then(
         res => {
             return res.json()
@@ -59,7 +60,24 @@ export const updateCategory = (categoryId, userId, token, category) => {
             console.log(err);
         });
 }
+//delete a category
+export const deleteCategory = (categoryId, userId, token) => {
+    return fetch(`${API}/category/${categoryId}/${userId}`,{
+        method: "DELETE",
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`
+        },
 
+    }).then(
+        res => {
+            return res.json()
+        }
+    )
+        .catch(err => {
+            console.log(err);
+        });
+}
 
 //product calls
 //create a product

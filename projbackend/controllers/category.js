@@ -40,6 +40,7 @@ exports.getAllCategory = (req, res) => {
 };
 
 exports.updateCategory = (req, res) => {
+  console.log(req);
   const category = req.category;
   category.name = req.body.name;
 
@@ -49,7 +50,7 @@ exports.updateCategory = (req, res) => {
         error: "Failed to update category"
       });
     }
-    res.json(updatedCategory);
+    res.json({ updatedCategory });
   });
 };
 

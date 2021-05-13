@@ -2,15 +2,21 @@ import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
 import Base from '../core/Base';
-import { createCategory, getCategory, updateCategory } from './helper/adminapicall';
+import { getCategory, updateCategory } from './helper/adminapicall';
 
 
 
-const UpdateCategory = ({match}) => {
-    const [name, setName] = useState("");
-    const [error, setError] = useState(false);
-    const [success, setSuccess] = useState(false);
+const UpdateCategory = ({ match }) => {
     const { user, token } = isAutheticated();
+    const [values, setValues] = useState({
+        name: "",
+        error: "",
+        loading:false,
+        success:false,
+        
+    });
+    
+    const { success,name,error } = values;
     const goBack = () => (
         <div className="mt-5">
             <Link className="btn btn-sm btn-success mb-3" to="/admin/dashboard">
@@ -20,37 +26,47 @@ const UpdateCategory = ({match}) => {
     )
     const preload = (categoryId) => {
         getCategory(categoryId).then((data) => {
+           
             if (data.error) {
-                setError(true);
+                setValues({...values,error:data.error})
 
             }
             else {
-                setName(data.name);
+                console.log(data);
+                setValues({ ...values, name: data.name })
             }
+
+            
         })
     }
+   
     useEffect(() => {
         preload(match.params.categoryId);
-    },[])
-    const handleChange = (event) => {
-        setError("");
-        setName(event.target.value);
+        //console.log(match.params.categoryId);
+    }, [])
+    
+    //console.log(name);
+    const handleChange = name=>event => {
+        //console.log(event.target.value);
+        setValues({ ...values, [name]: event.target.value });
     }
     const onSubmit = (event) => {
         event.preventDefault();
-        setError("");
-        setSuccess(false);
+        //setValues({ ...values, error: "" });
         //backend request fired
         updateCategory(match.params.categoryId,user._id, token, name)
             .then(data => {
-                if (data.err) {
-                    setError(true);
+                console.log(data);
+            
+                if (data.error) {
+                    setValues({ ...values, error: data.error })
+                    console.log(data.error);
                 }
                 else {
-                    setError("");
-                    setName("");
-                    setSuccess(true);
+                    setValues({ ...values, name:data.name,success:true });
+                    
                 }
+                //console.log(name);
         })
     }
     const successMessage = () => {
@@ -74,8 +90,9 @@ const UpdateCategory = ({match}) => {
             <div className="form-group">
                 <p className="lead">Enter the category</p>
                 <input type="text" className="form-control my-3" autoFocus required placeholder="Summer"
-                    onChange={handleChange}
-                    value={name}/>
+                   
+                    value={name}
+                    onChange={handleChange("name")}/>
                 <button className="btn btn-outline-info"
                 onClick={onSubmit}>
                     Update Category
