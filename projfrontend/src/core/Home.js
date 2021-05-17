@@ -11,7 +11,7 @@ export default function Home() {
   const loadAllProduct = () => {
     getProducts()
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         if (data && data.error) {
           setError(data.error);
         }
@@ -25,7 +25,7 @@ export default function Home() {
   useEffect(() => {
     loadAllProduct();
   }, []);
-  console.log(products);
+  //console.log(products);
   return (
     <Base title="Home Page" description="Welcome to the Tshirt Store">
       <div className="row text-center">
